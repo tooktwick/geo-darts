@@ -21,7 +21,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
                 遊び方 & 投てき・採点ガイド
               </h2>
               <p className="text-xs text-slate-400">
-                『日本列島 ダーツの旅』の操作方法と新・基本モードのルール
+                『Geo Darts Japan（ジオダーツ 日本列島）』の操作方法と基本モードのルール
               </p>
             </div>
           </div>

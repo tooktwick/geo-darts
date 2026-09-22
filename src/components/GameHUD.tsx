@@ -71,11 +71,11 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           <div className="glass-panel px-3.5 py-1.5 rounded-xl flex items-center gap-2.5 border-amber-500/30 shadow-lg">
             <span className="text-2xl animate-bounce">🎯</span>
             <div>
-              <h1 className="font-calligraphy text-lg md:text-xl font-bold tracking-wider text-amber-300 drop-shadow-sm flex items-center gap-1.5">
-                日本列島 ダーツの旅
+              <h1 className="font-sans text-lg md:text-xl font-black tracking-wider text-amber-300 drop-shadow-sm flex items-center gap-1.5">
+                Geo Darts Japan
               </h1>
-              <span className="text-[10px] text-slate-400 tracking-widest block -mt-1 font-mono uppercase">
-                Japan Dart Trip
+              <span className="text-[10px] text-slate-400 tracking-widest block -mt-0.5 font-calligraphy font-semibold">
+                ジオダーツ 日本列島
               </span>
             </div>
           </div>

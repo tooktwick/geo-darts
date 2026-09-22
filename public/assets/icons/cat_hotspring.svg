@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="spa-wood" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b45309"/>
+      <stop offset="50%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+    <linearGradient id="spa-water" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="spa-steam" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#fda4af" stop-opacity="0.1"/>
+    </linearGradient>
+    <filter id="spa-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#f43f5e" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- 背景円 -->
+  <circle cx="32" cy="32" r="30" fill="#1c0d12" stroke="#f43f5e" stroke-width="2" filter="url(#spa-glow)"/>
+  <circle cx="32" cy="32" r="27" fill="none" stroke="#fb7185" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.5"/>
+
+  <!-- 立ち上る温泉三本湯気 (和の伝統温泉マーク意匠) -->
+  <!-- 左の湯気 -->
+  <path d="M22 28 C20 24, 25 21, 23 16 C21 13, 23 10, 24 8" fill="none" stroke="#fda4af" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- 中央の湯気 (高め) -->
+  <path d="M32 26 C29 22, 35 18, 32 12 C30 8, 33 5, 34 3" fill="none" stroke="#f43f5e" stroke-width="3" stroke-linecap="round"/>
+  <!-- 右の湯気 -->
+  <path d="M42 28 C44 24, 39 21, 41 16 C43 13, 41 10, 40 8" fill="none" stroke="#fda4af" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- 湯気の発光オーラ -->
+  <circle cx="32" cy="18" r="14" fill="#f43f5e" opacity="0.1"/>
+
+  <!-- 露天風呂・檜湯船 -->
+  <path d="M12 36 Q32 32 52 36 L48 52 Q32 56 16 52 Z" fill="url(#spa-wood)" stroke="#f59e0b" stroke-width="0.8"/>
+  <!-- 檜の銅タガ (金属リング) -->
+  <path d="M13 41 Q32 37 51 41 M15 47 Q32 43 49 47" fill="none" stroke="#f59e0b" stroke-width="1.2"/>
+
+  <!-- 湯面 (青く澄んだ温泉水) -->
+  <ellipse cx="32" cy="36" rx="18" ry="4" fill="url(#spa-water)" stroke="#7dd3fc" stroke-width="0.5"/>
+  <!-- 湯面の波紋 -->
+  <ellipse cx="32" cy="36" rx="11" ry="2.2" fill="none" stroke="#e0f2fe" stroke-width="0.8" opacity="0.7"/>
+
+  <!-- 浮かぶ和手ぬぐい・湯桶 (風情) -->
+  <circle cx="25" cy="35" r="3.5" fill="#d97706" stroke="#fbbf24" stroke-width="0.6"/>
+  <rect x="35" y="34" width="5" height="3" rx="0.5" fill="#f8fafc" opacity="0.8"/>
+</svg>

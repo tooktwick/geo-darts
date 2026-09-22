@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="nature-sun" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f87171"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <linearGradient id="nature-mtn" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="40%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="nature-border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="nature-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#10b981" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  <!-- 背景円 -->
+  <circle cx="32" cy="32" r="30" fill="#091b1f" stroke="url(#nature-border)" stroke-width="2" filter="url(#nature-glow)"/>
+  <circle cx="32" cy="32" r="27" fill="none" stroke="#34d399" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.5"/>
+
+  <!-- 旭日 (朝日) -->
+  <circle cx="32" cy="24" r="11" fill="url(#nature-sun)" opacity="0.9"/>
+  <!-- 日光の輝き -->
+  <circle cx="32" cy="24" r="14" fill="none" stroke="#fca5a5" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- 富士山 本体山稜 -->
+  <path d="M28 25 L36 25 Q42 36 53 48 Q32 46 11 48 Q22 36 28 25 Z" fill="url(#nature-mtn)"/>
+
+  <!-- 万年雪・山頂の雪冠 (ギザギザ形状) -->
+  <path d="M28 25 L36 25 L38 31 L35 30 L33 34 L31 31 L29 34 L27 30 L26 31 Z" fill="#ffffff" stroke="#e0f2fe" stroke-width="0.5"/>
+
+  <!-- 前景の波・雲海 (和風波紋) -->
+  <path d="M12 47 Q18 43 24 46 Q30 49 36 46 Q42 43 52 47 L52 53 Q32 55 12 53 Z" fill="#042f2e" stroke="#10b981" stroke-width="0.8"/>
+  <path d="M18 50 Q24 47 30 50 Q36 53 42 50 Q46 48 50 51" fill="none" stroke="#6ee7b7" stroke-width="0.8" opacity="0.7"/>
+
+  <!-- 松の木シルエット (左下) -->
+  <path d="M16 48 C14 46, 13 44, 15 43 C18 43, 17 46, 17 48 Z" fill="#059669"/>
+  <path d="M19 46 C17 44, 16 42, 18 41 C21 41, 20 44, 20 46 Z" fill="#10b981"/>
+</svg>

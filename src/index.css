@@ -1,0 +1,212 @@
+@import 'leaflet/dist/leaflet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+    font-family: 'M PLUS Rounded 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+/* 動的フォントスケーリング (--font-scale) & フォントサイズ「大」対応 */
+:root {
+  --font-scale: 1.15;
+}
+
+.font-scaled, .font-size-large {
+  font-size: calc(1rem * var(--font-scale, 1.15));
+}
+
+.font-scaled .text-\[9px\], .font-size-large .text-\[9px\] {
+  font-size: calc(9px * var(--font-scale, 1.15)) !important;
+}
+
+.font-scaled .text-\[10px\], .font-size-large .text-\[10px\] {
+  font-size: calc(10px * var(--font-scale, 1.15)) !important;
+  line-height: 1.35 !important;
+}
+
+.font-scaled .text-\[11px\], .font-size-large .text-\[11px\] {
+  font-size: calc(11px * var(--font-scale, 1.15)) !important;
+  line-height: 1.4 !important;
+}
+
+.font-scaled .text-xs, .font-size-large .text-xs {
+  font-size: calc(0.75rem * var(--font-scale, 1.15)) !important;
+  line-height: 1.45 !important;
+}
+
+.font-scaled .text-sm, .font-size-large .text-sm {
+  font-size: calc(0.875rem * var(--font-scale, 1.15)) !important;
+  line-height: 1.5 !important;
+}
+
+.font-scaled .text-base, .font-size-large .text-base {
+  font-size: calc(1rem * var(--font-scale, 1.15)) !important;
+  line-height: 1.5 !important;
+}
+
+.font-scaled .text-lg, .font-size-large .text-lg {
+  font-size: calc(1.125rem * var(--font-scale, 1.15)) !important;
+}
+
+.font-scaled .text-xl, .font-size-large .text-xl {
+  font-size: calc(1.25rem * var(--font-scale, 1.15)) !important;
+}
+
+.font-scaled .text-2xl, .font-size-large .text-2xl {
+  font-size: calc(1.5rem * var(--font-scale, 1.15)) !important;
+}
+
+/* フォントサイズ連動のウィンドウサイズ・モーダル寸法自動適応 */
+.font-scaled [role="dialog"] > div {
+  /* フォントサイズ拡大に合わせてモーダルウィンドウの最大幅を画面幅まで適応拡大 */
+  max-width: min(95vw, calc(56rem * max(1, calc(var(--font-scale, 1.15) * 0.75))));
+  max-height: 92vh;
+}
+
+/* フォントサイズが非常に大きい場合 (180%〜300%) のレイアウト破綻防止 */
+@media (min-width: 640px) {
+  .font-scaled header {
+    max-height: 38vh;
+  }
+  .font-scaled footer {
+    max-height: 48vh;
+  }
+}
+
+/* 和風・アーケード調のタイポグラフィ */
+.font-calligraphy {
+  font-family: 'Yuji Boku', serif;
+}
+
+/* カスタムスクロールバー */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(234, 179, 8, 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(234, 179, 8, 0.8);
+}
+
+/* ガラスモーフィズム */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-panel-gold {
+  background: rgba(30, 27, 75, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(234, 179, 8, 0.15);
+}
+
+/* Leaflet用カスタムスタイル */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background-color: #0f172a !important;
+  cursor: crosshair !important;
+}
+
+.leaflet-tile-pane {
+  filter: brightness(0.95) contrast(1.05);
+}
+
+.leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #94a3b8 !important;
+  font-size: 10px !important;
+  border-radius: 6px 0 0 0 !important;
+  padding: 2px 6px !important;
+}
+
+.leaflet-control-attribution a {
+  color: #38bdf8 !important;
+}
+
+/* ダーツ着弾ピン & 投擲位置マーカー用 (Leaflet標準の枠線・背景をリセット) */
+.custom-dart-hit-marker,
+.custom-dart-aim-marker {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+/* スタンプ押印アニメーション */
+@keyframes stampIn {
+  0% {
+    transform: scale(3) rotate(-30deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(0.9) rotate(8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(5deg);
+    opacity: 0.92;
+  }
+}
+
+.animate-stamp {
+  animation: stampIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* ダーツ投てきアニメーション */
+@keyframes dartFlyIn {
+  0% {
+    transform: translate(calc(var(--start-x, 0px) - var(--end-x, 0px)), calc(var(--start-y, 0px) - var(--end-y, 0px))) scale(2.6) rotate(-25deg);
+    opacity: 0.3;
+  }
+  30% {
+    opacity: 1;
+  }
+  85% {
+    transform: scale(0.9) rotate(5deg);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.animate-dart-fly {
+  animation: dartFlyIn 0.38s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+/* 着弾波紋 */
+@keyframes hitShockwave {
+  0% {
+    r: 4;
+    opacity: 1;
+    stroke-width: 4;
+  }
+  100% {
+    r: 40;
+    opacity: 0;
+    stroke-width: 1;
+  }
+}
+
+.animate-shockwave {
+  animation: hitShockwave 0.6s ease-out forwards;
+}

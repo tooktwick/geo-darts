@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="pin-body" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="pin-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="spot-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#2563eb" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- 背景円 -->
+  <circle cx="32" cy="32" r="30" fill="#0b1329" stroke="#3b82f6" stroke-width="2" filter="url(#spot-glow)"/>
+  <circle cx="32" cy="32" r="27" fill="none" stroke="#60a5fa" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.5"/>
+
+  <!-- 八角の羅針盤星 (方位の光) -->
+  <g transform="translate(32, 27)">
+    <polygon points="0,-18 3,-5 18,0 3,5 0,18 -3,5 -18,0 -3,-5" fill="none" stroke="#60a5fa" stroke-width="0.8" opacity="0.5"/>
+    <polygon points="0,-14 2,-4 14,0 2,4 0,14 -2,4 -14,0 -2,-4" fill="url(#pin-gold)" opacity="0.25"/>
+  </g>
+
+  <!-- 和風マップピン (しずく型ターゲット) -->
+  <path d="M32 10 C22 10, 14 18, 14 28 C14 39, 32 54, 32 54 C32 54, 50 39, 50 28 C50 18, 42 10, 32 10 Z" fill="url(#pin-body)" stroke="#93c5fd" stroke-width="1"/>
+
+  <!-- ピン内側の金彩円輪 -->
+  <circle cx="32" cy="27" r="10" fill="#0f172a" stroke="url(#pin-gold)" stroke-width="1.8"/>
+
+  <!-- 方位針・ダーツターゲット針 (赤と金) -->
+  <!-- 北針 (赤) -->
+  <polygon points="32,19 35,27 32,25" fill="#ef4444"/>
+  <polygon points="32,19 29,27 32,25" fill="#dc2626"/>
+  <!-- 南針 (金) -->
+  <polygon points="32,35 35,27 32,29" fill="#fde047"/>
+  <polygon points="32,35 29,27 32,29" fill="#d97706"/>
+  
+  <!-- 中心のピボット玉 -->
+  <circle cx="32" cy="27" r="2.2" fill="#ffffff" stroke="#1e293b" stroke-width="0.6"/>
+</svg>

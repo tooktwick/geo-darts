@@ -61,7 +61,7 @@
 
 ### 2.1 ディレクトリ構成
 ```text
-mapDirts/
+geo-darts/
 ├── docs/
 │   └── SYSTEM_SPECIFICATION.md    # システム仕様書 (本書)
 ├── src/

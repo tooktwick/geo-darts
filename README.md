@@ -124,8 +124,8 @@ HUD操作ボタン（パスポート、音響、フォント拡大等）との�
 
 ```bash
 # 1. リポジトリのクローン
-git clone https://github.com/tooktwick/mapDirts.git
-cd mapDirts
+git clone https://github.com/tooktwick/geo-darts.git
+cd geo-darts
 
 # 2. 依存関係のインストール
 npm install
@@ -146,7 +146,7 @@ npm run preview
 ## 📁 ディレクトリ構成
 
 ```text
-mapDirts/
+geo-darts/
 ├── docs/
 │   └── SYSTEM_SPECIFICATION.md    # システム詳細仕様書 (v1.4.0)
 ├── public/

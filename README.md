@@ -7,6 +7,7 @@
 ![Vite](https://img.shields.io/badge/Vite-8.3-646cff?logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?logo=tailwindcss&logoColor=white)
 ![Leaflet](https://img.shields.io/badge/Leaflet-1.9-199900?logo=leaflet&logoColor=white)
+![Built with Google Antigravity](https://img.shields.io/badge/Built_with-Google_Antigravity-4285F4?logo=google&logoColor=white)
 ![Version](https://img.shields.io/badge/Version-1.4.0-amber)
 
 ---
@@ -170,6 +171,17 @@ mapDirts/
 より詳細なアーキテクチャ設計、数学的物理演算（風力・ズーム変位式）、セキュリティ暗号署名仕様、品質保証テスト内容については、以下をご参照ください。
 
 - [システム仕様書 (SYSTEM_SPECIFICATION.md)](./docs/SYSTEM_SPECIFICATION.md)
+
+---
+
+## 🤖 開発について (Built with Google Antigravity)
+
+本プロジェクトは、**Google DeepMind** が開発する次世代エージェント型AIコーディング環境「**Google Antigravity**」を活用して開発されました。
+
+- **ペアプログラミング & 自律エージェント協調**:
+  - 人間とAIエージェントの緊密な対話型ペアプログラミングに加え、ゲームプランナー（企画役）、事業開発（営業役）、マーケティング（販売役）の**専門特化サブエージェント群による多角的分析・評価**を統合。
+- **自律的データ拡充 & 高精度テスト**:
+  - 全国47都道府県・940箇所の完全マスターデータ構築、有名度難易度連動選出、ご当地推理クイズ80問の自動生成、実機ヘッドレスブラウザ（Edge CDP）による自律E2E描画検証まで、Antigravity のエージェント機能により高品質・高速に実現されています。
 
 ---
 

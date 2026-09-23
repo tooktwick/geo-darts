@@ -215,7 +215,14 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
                     crossOrigin="anonymous"
                     loading="eager"
                     onLoad={() => setImageLoaded(true)}
-                    onError={() => setImageError(true)}
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.src.endsWith(catInfo.imagePath)) {
+                        target.src = catInfo.imagePath;
+                      } else {
+                        setImageError(true);
+                      }
+                    }}
                     className={`w-full h-full object-cover transition-all duration-300 ${
                       imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
                     }`}

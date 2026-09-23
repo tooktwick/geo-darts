@@ -2,7 +2,7 @@ import React from 'react';
 import { QuizQuestionResult, Prefecture } from '../types';
 import { CategoryIcon } from './CategoryIcon';
 import { CheckCircle2, AlertCircle, Sparkles, MapPin, Award, ArrowRight, Trophy } from 'lucide-react';
-import { getLandmarkImageUrl } from '../utils/landmarkImages';
+import { getLandmarkImageUrl, getCategoryFallbackImage } from '../utils/landmarkImages';
 
 interface QuizResultModalProps {
   result: QuizQuestionResult;
@@ -103,8 +103,14 @@ export const QuizResultModal: React.FC<QuizResultModalProps> = ({
               alt={targetLandmark.name}
               className="w-full h-full object-cover"
               onError={(e) => {
-                // 画像フォールバック
-                (e.target as HTMLElement).style.display = 'none';
+                // 画像フォールバック: ローカル画像へ切替
+                const target = e.currentTarget;
+                const fallback = getCategoryFallbackImage(targetLandmark.category);
+                if (!target.src.endsWith(fallback)) {
+                  target.src = fallback;
+                } else {
+                  target.style.display = 'none';
+                }
               }}
             />
             <div className="absolute top-1.5 left-1.5 w-7 h-7 rounded-lg bg-slate-950/80 border border-amber-500/40 flex items-center justify-center">

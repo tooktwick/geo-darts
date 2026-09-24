@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Landmark, Prefecture, GameDifficulty } from '../types';
+import { Landmark, Prefecture, GameDifficulty, Language } from '../types';
 import { getLandmarkImageUrl, getCategoryInfo } from '../utils/landmarkImages';
+import { t, getLandmarkName, getPrefectureName, getCategoryName } from '../utils/i18n';
 import { CategoryIcon } from './CategoryIcon';
 import { MapPin, Image as ImageIcon, X, Zap, ChevronDown, ChevronUp, GripHorizontal } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -13,6 +14,7 @@ interface LandmarkHitModalProps {
   difficulty?: GameDifficulty;
   isPrefectureCleared?: boolean; // 3箇所目達成で県制覇か
   clearedCount: number;          // 今回で何箇所目か (1〜3)
+  language?: Language;
   onClose: () => void;
   onProceedToPrefClear?: () => void; // 県制覇モーダルへの遷移
   autoCloseDurationMs?: number;      // 自動消去までの時間 (デフォルト3800ms)
@@ -29,6 +31,7 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
   difficulty = 'easy',
   isPrefectureCleared = false,
   clearedCount,
+  language = 'ja',
   onClose,
   onProceedToPrefClear,
   autoCloseDurationMs = 3800,
@@ -135,7 +138,7 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
   return (
     <aside
       ref={containerRef}
-      aria-label="名所命中通知"
+      aria-label={isPinpoint ? t('pinpoint_hit', language) : t('near_pin_hit', language)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={
@@ -160,13 +163,13 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           className="bg-gradient-to-r from-amber-600/50 via-amber-500/40 to-amber-600/50 px-2.5 py-1.5 border-b border-amber-500/30 flex items-center justify-between cursor-move select-none"
-          title="ドラッグして好きな場所に移動できます"
+          title={t('drag_hint', language)}
         >
           <div className="flex items-center gap-1.5 min-w-0">
             <GripHorizontal className="w-3.5 h-3.5 text-amber-300/60 flex-shrink-0" />
             <CategoryIcon category={landmark.category} size={18} withGlow />
             <span className="text-[11px] font-black text-amber-200 tracking-wide truncate">
-              {isPinpoint ? '✨ ピンポイント直撃！' : '🎉 ニアピン命中！'}
+              {isPinpoint ? t('pinpoint_hit', language) : t('near_pin_hit', language)}
             </span>
           </div>
           
@@ -179,7 +182,7 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
             <button
               onClick={() => setIsMinimized((prev) => !prev)}
               className="p-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
-              title={isMinimized ? 'カードを展開' : 'カードを最小化'}
+              title={isMinimized ? t('expand_card', language) : t('minimize', language)}
             >
               {isMinimized ? <ChevronDown className="w-3.5 h-3.5 text-amber-300" /> : <ChevronUp className="w-3.5 h-3.5 text-slate-300" />}
             </button>
@@ -188,7 +191,7 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
             <button
               onClick={onClose}
               className="p-1 rounded-lg bg-slate-800/80 hover:bg-rose-900/80 text-slate-300 hover:text-rose-200 transition-colors"
-              title="閉じる"
+              title={t('close', language)}
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -205,13 +208,13 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
                   {!imageLoaded && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 text-slate-400 animate-pulse gap-1">
                       <ImageIcon className="w-5 h-5 text-amber-400/60" />
-                      <span className="text-[10px]">{catInfo.name}を読込中...</span>
+                      <span className="text-[10px]">{t('loading_photo', language, { category: getCategoryName(landmark.category, language) })}</span>
                     </div>
                   )}
                   <img
                     data-landmark-photo="true"
                     src={imageUrl}
-                    alt={`${landmark.name} (${catInfo.name})`}
+                    alt={`${getLandmarkName(landmark, language)} (${getCategoryName(landmark.category, language)})`}
                     crossOrigin="anonymous"
                     loading="eager"
                     onLoad={() => setImageLoaded(true)}
@@ -233,7 +236,7 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
                 <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-amber-950/80 via-slate-900 to-slate-950 p-2 text-center">
                   <CategoryIcon category={landmark.category} size={28} withGlow className="mb-1" />
                   <span className="text-xs font-bold text-amber-300 font-calligraphy">
-                    {prefecture.name} 【{catInfo.name}】
+                    {getPrefectureName(prefecture, language)} 【{getCategoryName(landmark.category, language)}】
                   </span>
                 </div>
               )}
@@ -244,11 +247,11 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
                   <div className="flex items-center gap-1 mb-0.5 flex-wrap">
                     <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-slate-950/80 text-amber-300 border border-amber-500/40 backdrop-blur-sm flex items-center gap-0.5">
                       <MapPin className="w-2.5 h-2.5 text-red-400" />
-                      {prefecture.name}
+                      {getPrefectureName(prefecture, language)}
                     </span>
                     <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full border backdrop-blur-sm ${catInfo.badgeColor} flex items-center gap-0.5`}>
                       <CategoryIcon category={landmark.category} size={11} />
-                      <span>{catInfo.name}</span>
+                      <span>{getCategoryName(landmark.category, language)}</span>
                     </span>
                     {landmark.fameLevel && (
                       <span
@@ -260,17 +263,17 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
                             : 'bg-emerald-500/30 text-emerald-200 border-emerald-400/50'
                         }`}
                       >
-                        {landmark.fameLevel === 'national' ? '🌟全国' : landmark.fameLevel === 'regional' ? '🗺️地域' : '🌿穴場'}
+                        {landmark.fameLevel === 'national' ? t('fame_national', language) : landmark.fameLevel === 'regional' ? t('fame_regional', language) : t('fame_minor', language)}
                       </span>
                     )}
                     {isPrefectureCleared && (
                       <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-500/40 text-emerald-300 border border-emerald-400">
-                        🏆 3箇所制覇！
+                        {t('spots_cleared', language)}
                       </span>
                     )}
                   </div>
                   <h3 className="text-base font-black text-white font-calligraphy drop-shadow-md tracking-wider truncate">
-                    {landmark.name}
+                    {getLandmarkName(landmark, language)}
                   </h3>
                 </div>
               </div>
@@ -287,7 +290,7 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
                 <div className="px-2 py-1 rounded-lg bg-orange-950/60 border border-orange-500/40 flex items-center gap-1.5 text-[10px] shadow-sm">
                   <span className="text-xs flex-shrink-0">🍜</span>
                   <div className="text-left overflow-hidden truncate">
-                    <span className="font-bold text-orange-300 mr-1 flex-shrink-0">名物:</span>
+                    <span className="font-bold text-orange-300 mr-1 flex-shrink-0">{t('gourmet_tag', language)}:</span>
                     <span className="text-orange-100 font-medium">{landmark.localGourmet}</span>
                   </div>
                 </div>
@@ -298,7 +301,7 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
                 <div className="px-2 py-1 rounded-lg bg-slate-800/80 border border-amber-500/30 flex items-start gap-1.5 text-[10px] text-slate-300">
                   <span className="text-xs flex-shrink-0 mt-0.5">📜</span>
                   <div className="text-left leading-relaxed">
-                    <span className="font-bold text-amber-300 block text-[10px]">エピソード:</span>
+                    <span className="font-bold text-amber-300 block text-[10px]">{t('episode_tag', language)}:</span>
                     <span>{landmark.episode}</span>
                   </div>
                 </div>
@@ -308,8 +311,8 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
               <div className="px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center gap-1.5 text-[10px]">
                 <Zap className="w-3 h-3 text-amber-400 flex-shrink-0 animate-pulse" />
                 <div className="text-left overflow-hidden truncate">
-                  <span className="font-bold text-amber-300 mr-1">{catInfo.blessingName}:</span>
-                  <span className="text-slate-300">{catInfo.blessingDesc}</span>
+                  <span className="font-bold text-amber-300 mr-1">{t('blessing_tag', language)}:</span>
+                  <span className="text-slate-300">{catInfo.blessingName} - {catInfo.blessingDesc}</span>
                 </div>
               </div>
             </div>
@@ -319,14 +322,14 @@ export const LandmarkHitModal: React.FC<LandmarkHitModalProps> = ({
           <div className="px-2.5 py-1.5 bg-slate-900/95 flex items-center justify-between text-xs">
             <div className="flex items-center gap-1.5 truncate">
               <span className="text-amber-400">📍</span>
-              <span className="font-bold text-white truncate">{landmark.name}</span>
-              <span className="text-[10px] text-slate-400 hidden sm:inline">({prefecture.name})</span>
+              <span className="font-bold text-white truncate">{getLandmarkName(landmark, language)}</span>
+              <span className="text-[10px] text-slate-400 hidden sm:inline">({getPrefectureName(prefecture, language)})</span>
             </div>
             <button
               onClick={() => setIsMinimized(false)}
               className="text-[10px] font-bold text-amber-300 hover:text-amber-200 underline ml-2 flex-shrink-0"
             >
-              詳細を開く
+              {t('open_details', language)}
             </button>
           </div>
         )}

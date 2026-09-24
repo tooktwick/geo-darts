@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Prefecture, Landmark, ZoomRiskInfo, GameDifficulty, DartHit } from '../types';
+import { Prefecture, Landmark, ZoomRiskInfo, GameDifficulty, DartHit, Language } from '../types';
 import { CategoryIcon } from './CategoryIcon';
 import { CheckCircle2, Navigation, Target, Trophy, Shuffle, Sparkles, Zap, ZoomIn, Eye, EyeOff, Compass, ChevronDown, ChevronUp, Dices } from 'lucide-react';
 import { calculateHaversineDistance, calculateBearing, formatDistanceString, getNearPinThresholdKm } from '../utils/geo';
+import { t, getPrefectureName, getLandmarkName, getCategoryName, getWindDirectionName } from '../utils/i18n';
 
 interface BasicTourMissionBarProps {
   currentPref: Prefecture;
@@ -13,6 +14,7 @@ interface BasicTourMissionBarProps {
   zoomRisk?: ZoomRiskInfo;
   difficulty?: GameDifficulty;
   latestHit?: DartHit | null;
+  language?: Language;
   onSkipPrefecture: () => void;
   onRerollLandmarks?: () => void;
   onFocusLandmark?: (lm: Landmark) => void;
@@ -27,6 +29,7 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
   zoomRisk,
   difficulty = 'easy',
   latestHit,
+  language = 'ja',
   onSkipPrefecture,
   onRerollLandmarks,
   onFocusLandmark,
@@ -51,17 +54,17 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
           <div className="flex items-center gap-2 overflow-hidden">
             <span className="text-xl">📍</span>
             <span className="text-sm font-black text-amber-300 font-calligraphy tracking-wider whitespace-nowrap">
-              {currentPref.name}
+              {getPrefectureName(currentPref, language)}
             </span>
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 whitespace-nowrap">
-              {clearedCount} / 3 制覇
+              {clearedCount} / 3 {t('cleared_badge', language)}
             </span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-sky-300 border border-sky-500/40 whitespace-nowrap hidden sm:inline">
-              🎯 判定: {thresholdKm}km
+              🎯 {thresholdKm}km
             </span>
             {activeHit && activeHit.distanceToTargetKm !== undefined && difficulty !== 'hard' && (
               <span className="text-[10px] text-sky-300 font-mono hidden sm:inline truncate">
-                直近: {activeHit.nearestLandmarkName || '目標'}まで {activeHit.distanceToTargetKm < 1 ? `${Math.round(activeHit.distanceToTargetKm * 1000)}m` : `${activeHit.distanceToTargetKm.toFixed(1)}km`}{activeHit.targetBearing ? ` (${activeHit.targetBearing})` : ''}
+                {t('last_shot', language)}: {activeHit.nearestLandmarkName || 'Target'} {activeHit.distanceToTargetKm < 1 ? `${Math.round(activeHit.distanceToTargetKm * 1000)}m` : `${activeHit.distanceToTargetKm.toFixed(1)}km`}{activeHit.targetBearing ? ` (${getWindDirectionName(activeHit.targetBearing, language)})` : ''}
               </span>
             )}
           </div>
@@ -70,27 +73,27 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
               <button
                 onClick={onRerollLandmarks}
                 className="px-2 py-1 rounded-xl text-amber-200 hover:text-white bg-amber-950/80 hover:bg-amber-900/80 text-[10px] font-bold border border-amber-500/40 transition-all flex items-center gap-1 active:scale-95"
-                title="この県の候補（全20箇所）から別の名所3箇所を引き直す"
+                title={t('reroll_spots', language)}
               >
                 <Dices className="w-3 h-3 text-amber-400" />
-                <span>チェンジ</span>
+                <span>{t('reroll_spots', language)}</span>
               </button>
             )}
             <button
               onClick={onSkipPrefecture}
               className="px-2 py-1 rounded-xl text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 text-[10px] font-bold border border-slate-600 transition-all flex items-center gap-1"
-              title="別の都道府県に切り替える"
+              title={t('other_pref', language)}
             >
               <Shuffle className="w-3 h-3 text-amber-400" />
-              <span>別県</span>
+              <span>{t('other_pref', language)}</span>
             </button>
             <button
               onClick={() => setIsCollapsed(false)}
               className="px-2.5 py-1 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[11px] font-bold border border-amber-400/50 flex items-center gap-1 transition-all shadow-md"
-              title="名所一覧パネルを展開"
+              title={t('expand', language)}
             >
               <ChevronUp className="w-3.5 h-3.5 text-amber-400" />
-              <span>目標詳細</span>
+              <span>{t('expand', language)}</span>
             </button>
           </div>
         </div>
@@ -105,10 +108,10 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 uppercase tracking-wider">
-                  現在探索中
+                  {t('now_exploring', language)}
                 </span>
                 <h3 className="text-lg md:text-xl font-black text-amber-300 font-calligraphy tracking-wider">
-                  {currentPref.name}
+                  {getPrefectureName(currentPref, language)}
                 </h3>
                 <span className="text-xs text-slate-400 font-mono hidden sm:inline">
                   ({currentPref.capital})
@@ -124,36 +127,36 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
                   }`}
                   title={
                     difficulty === 'easy'
-                      ? 'Easy: 目標表示ON (判定: 20km以内)'
+                      ? t('diff_easy_title', language)
                       : difficulty === 'normal'
-                      ? 'Normal: 目標表示OFF・投てき後距離表示 (判定: 10km以内)'
-                      : 'Hard: 目標表示OFF・距離なし (判定: 5km以内)'
+                      ? t('diff_normal_title', language)
+                      : t('diff_hard_title', language)
                   }
                 >
                   {difficulty === 'easy' ? (
                     <>
-                      <Eye className="w-3 h-3" /> 目標ON
+                      <Eye className="w-3 h-3" /> {language === 'en' ? 'Pins ON' : '目標ON'}
                     </>
                   ) : (
                     <>
-                      <EyeOff className="w-3 h-3" /> 目標OFF
-                      {difficulty === 'normal' && ' (距離表示)'}
+                      <EyeOff className="w-3 h-3" /> {language === 'en' ? 'Pins OFF' : '目標OFF'}
+                      {difficulty === 'normal' && (language === 'en' ? ' (Dist ON)' : ' (距離表示)')}
                     </>
                   )}
                 </span>
                 {/* ニアピン判定基準バッジ */}
                 <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-sky-950/80 text-sky-300 border border-sky-400/50 flex items-center gap-1 shadow-sm">
                   <Target className="w-3 h-3 text-sky-400" />
-                  ニアピン: {thresholdKm}km以内
+                  {t('near_pin_hint', language, { km: thresholdKm })}
                 </span>
                 {/* 難易度連動候補プールバッジ */}
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300/90 border border-amber-500/30 flex items-center gap-1 hidden sm:inline-flex">
                   <Dices className="w-3 h-3 text-amber-400" />
                   {difficulty === 'easy'
-                    ? '全国レベル候補から3箇所選出'
+                    ? t('national_selection', language)
                     : difficulty === 'normal'
-                    ? '全国・地域候補から3箇所選出'
-                    : '全20候補から3箇所選出'}
+                    ? t('national_regional_selection', language)
+                    : t('all_selection', language)}
                 </span>
                 {zoomRisk && (
                   <span className={`text-[10px] font-black px-2 py-0.5 rounded-full border flex items-center gap-1 ${zoomRisk.colorClass}`}>
@@ -164,14 +167,22 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
               <p className="text-[11px] text-slate-300 hidden md:flex items-center gap-1 mt-0.5">
                 {difficulty === 'normal' ? (
                   <span className="text-amber-300 font-semibold">
-                    🎯 【Normal】目標ピン非表示・ニアピン判定10km以内！投げた後に目標までの直線距離と方角が表示されます。
+                    {language === 'en'
+                      ? '🎯 [Normal] Pins OFF / 10km tolerance! Distance & direction revealed after throws.'
+                      : '🎯 【Normal】目標ピン非表示・ニアピン判定10km以内！投げた後に目標までの直線距離と方角が表示されます。'}
                   </span>
                 ) : difficulty === 'hard' ? (
                   <span className="text-red-300 font-semibold">
-                    🔥 【Hard】目標ピンも距離表示も一切なし・ニアピン判定5km以内！己の地理知識だけで挑む極限モード。
+                    {language === 'en'
+                      ? '🔥 [Hard] Pins OFF / No distance hints / 5km tolerance! Extreme mode.'
+                      : '🔥 【Hard】目標ピンも距離表示も一切なし・ニアピン判定5km以内！己の地理知識だけで挑む極限モード。'}
                   </span>
                 ) : (
-                  <span>【Easy】目標ピン表示・ニアピン判定20km以内！名所敷地直撃でピンポイントボーナス獲得。</span>
+                  <span>
+                    {language === 'en'
+                      ? '🎯 [Easy] Pins ON / 20km tolerance! Hit spot grounds directly for bonus points.'
+                      : '【Easy】目標ピン表示・ニアピン判定20km以内！名所敷地直撃でピンポイントボーナス獲得。'}
+                  </span>
                 )}
               </p>
             </div>
@@ -180,9 +191,9 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
           <div className="flex items-center gap-2 md:gap-3">
             {/* 全国制覇数 */}
             <div className="text-right">
-              <span className="text-[10px] text-slate-400 block font-semibold">全国制覇</span>
+              <span className="text-[10px] text-slate-400 block font-semibold">{t('conquest_count', language)}</span>
               <span className="text-sm md:text-base font-black text-amber-400 font-mono">
-                {totalClearedCount} <span className="text-xs text-slate-400">/ 47県</span>
+                {totalClearedCount} <span className="text-xs text-slate-400">{t('total_47', language)}</span>
               </span>
             </div>
 
@@ -191,10 +202,10 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
               <button
                 onClick={onRerollLandmarks}
                 className="text-xs px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 flex items-center gap-1.5 transition-all active:scale-95 shadow-sm"
-                title="この県の候補（全20箇所）の中から別の名所3箇所を引き直す"
+                title={language === 'en' ? 'Reroll 3 landmarks from all candidates in this prefecture' : 'この県の候補（全20箇所）の中から別の名所3箇所を引き直す'}
               >
                 <Dices className="w-3.5 h-3.5 text-amber-400 animate-spin-slow" />
-                <span className="hidden sm:inline">名所チェンジ</span>
+                <span className="hidden sm:inline">{t('reroll_spots', language)}</span>
               </button>
             )}
 
@@ -202,20 +213,20 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
             <button
               onClick={onSkipPrefecture}
               className="text-xs px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 flex items-center gap-1.5 transition-all active:scale-95"
-              title="別の未制覇の県へ切り替える"
+              title={language === 'en' ? 'Skip to another unconquered prefecture' : '別の未制覇の県へ切り替える'}
             >
               <Shuffle className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden sm:inline">別の県</span>
+              <span className="hidden sm:inline">{t('other_pref', language)}</span>
             </button>
 
             {/* 最小化ボタン */}
             <button
               onClick={() => setIsCollapsed(true)}
               className="text-xs px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1 transition-all active:scale-95 shadow-sm"
-              title="パネルを折りたたんで地図を広く表示"
+              title={language === 'en' ? 'Collapse panel to see more map' : 'パネルを折りたたんで地図を広く表示'}
             >
               <ChevronDown className="w-4 h-4 text-amber-400" />
-              <span className="hidden sm:inline">折りたたむ</span>
+              <span className="hidden sm:inline">{t('fold', language)}</span>
             </button>
           </div>
         </div>
@@ -301,7 +312,7 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="text-[10px] font-bold text-amber-400/80">#{idx + 1}</span>
                       <h4 className="text-xs md:text-sm font-bold truncate">
-                        {lm.name}
+                        {getLandmarkName(lm, language)}
                       </h4>
                       {lm.fameLevel && (
                         <span
@@ -312,15 +323,12 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
                               ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
                               : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                           }`}
-                          title={
-                            lm.fameLevel === 'national'
-                              ? '全国レベル名所'
-                              : lm.fameLevel === 'regional'
-                              ? '地域レベル名所'
-                              : 'マイナー・穴場名所'
-                          }
                         >
-                          {lm.fameLevel === 'national' ? '🌟全国' : lm.fameLevel === 'regional' ? '🗺️地域' : '🌿穴場'}
+                          {lm.fameLevel === 'national'
+                            ? (language === 'en' ? '🌟Famous' : '🌟全国')
+                            : lm.fameLevel === 'regional'
+                            ? (language === 'en' ? '🗺️Regional' : '🗺️地域')
+                            : (language === 'en' ? '🌿Hidden' : '🌿穴場')}
                         </span>
                       )}
                     </div>
@@ -337,7 +345,7 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
                     {singleDistText && (
                       <div className="mt-1 flex items-center gap-1 text-[10px] text-sky-300 font-mono font-bold">
                         <span className="bg-sky-950/90 px-1.5 py-0.5 rounded border border-sky-400/40 shadow-sm">
-                          📍 あと {singleDistText} ({singleBearing})
+                          📍 {language === 'en' ? `Dist: ${singleDistText} (${getWindDirectionName(singleBearing || '', language)})` : `あと ${singleDistText} (${singleBearing})`}
                         </span>
                       </div>
                     )}
@@ -347,11 +355,11 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
                 <div className="flex-shrink-0">
                   {isCleared ? (
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/30 text-emerald-300 font-bold">
-                      達成!
+                      {t('cleared_badge', language)}
                     </span>
                   ) : (
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse font-bold flex items-center gap-1">
-                      <Target className="w-3 h-3" /> 狙え
+                      <Target className="w-3 h-3" /> {t('aim_btn', language)}
                     </span>
                   )}
                 </div>
@@ -363,9 +371,11 @@ export const BasicTourMissionBar: React.FC<BasicTourMissionBarProps> = ({
         {/* 下段: 進捗バー */}
         <div className="mt-2 flex items-center justify-between text-xs pt-1.5 border-t border-amber-500/10">
           <div className="flex items-center gap-2 text-slate-400 text-[11px]">
-            <span>進捗:</span>
-            <span className="text-amber-300 font-bold">{clearedCount} / 3 箇所クリア</span>
-            <span>({attempts}投目)</span>
+            <span>{language === 'en' ? 'Progress:' : '進捗:'}</span>
+            <span className="text-amber-300 font-bold">
+              {language === 'en' ? `${clearedCount} / 3 Cleared` : `${clearedCount} / 3 箇所クリア`}
+            </span>
+            <span>({attempts}{language === 'en' ? ' throws' : '投目'})</span>
           </div>
 
           <div className="w-40 h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">

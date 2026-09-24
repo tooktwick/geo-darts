@@ -1,3 +1,6 @@
+// 言語型 (日本語 / 英語)
+export type Language = 'ja' | 'en';
+
 // 地域区分型
 export type RegionType = 
   | 'hokkaido' 
@@ -62,6 +65,7 @@ export type LandmarkFameLevel = 'national' | 'regional' | 'minor';
 export interface Landmark {
   id: string;
   name: string;
+  englishName?: string;
   prefId: number;
   description: string;
   coordinates: {

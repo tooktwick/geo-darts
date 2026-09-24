@@ -1,11 +1,15 @@
 import React from 'react';
+import { Language } from '../types';
 import { X, Target, Compass, Award, ZoomIn, Flame, HelpCircle, MapPin, Sparkles } from 'lucide-react';
 
 interface HelpModalProps {
+  language?: Language;
   onClose: () => void;
 }
 
-export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
+export const HelpModal: React.FC<HelpModalProps> = ({ language = 'ja', onClose }) => {
+  const isEn = language === 'en';
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div className="relative w-full max-w-4xl w-[92vw] max-h-[88vh] glass-panel-gold rounded-3xl p-5 md:p-8 border-amber-500/50 shadow-2xl flex flex-col overflow-hidden">
@@ -18,10 +22,12 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
             </div>
             <div>
               <h2 className="text-xl md:text-2xl font-bold text-amber-300 font-calligraphy">
-                遊び方 & 投てき・採点ガイド
+                {isEn ? 'How to Play & Scoring Guide' : '遊び方 & 投てき・採点ガイド'}
               </h2>
               <p className="text-xs text-slate-400">
-                『Geo Darts Japan（ジオダーツ 日本列島）』の操作方法と基本モードのルール
+                {isEn
+                  ? 'Rules and throwing mechanics for Geo Darts Japan'
+                  : '『Geo Darts Japan（ジオダーツ 日本列島）』の操作方法と基本モードのルール'}
               </p>
             </div>
           </div>
@@ -41,42 +47,58 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
           <div className="bg-slate-900/90 p-4 rounded-2xl border border-amber-400/50 shadow-lg">
             <h3 className="text-base font-bold text-amber-300 flex items-center gap-2 mb-2 font-calligraphy">
               <MapPin className="w-5 h-5 text-amber-400" />
-              1. 基本モード：県内3大名所ニアピン巡り
+              {isEn ? '1. Basic Mode: 3 Landmark Near Pin Tour' : '1. 基本モード：県内3大名所ニアピン巡り'}
             </h3>
             <div className="space-y-2.5 text-xs text-slate-300 leading-relaxed">
               <div className="flex items-start gap-2">
                 <span className="font-bold text-amber-400 font-mono text-sm">①</span>
                 <div>
-                  <strong className="text-slate-100">未制覇の県がランダム選定:</strong>
+                  <strong className="text-slate-100">
+                    {isEn ? 'Random Prefecture Selection:' : '未制覇の県がランダム選定:'}
+                  </strong>
                   <span className="text-slate-400 block">
-                    まだクリアしていない都道府県の中から1つが自動選ばれます。
+                    {isEn
+                      ? 'A prefecture you have not yet conquered is randomly chosen.'
+                      : 'まだクリアしていない都道府県の中から1つが自動選ばれます。'}
                   </span>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="font-bold text-amber-400 font-mono text-sm">②</span>
                 <div>
-                  <strong className="text-slate-100">県内3大名所ターゲット:</strong>
+                  <strong className="text-slate-100">
+                    {isEn ? '3 Landmark Targets:' : '県内3大名所ターゲット:'}
+                  </strong>
                   <span className="text-slate-400 block">
-                    その県を代表する有名な観光地・世界遺産・絶景スポット3箇所がマップ上に登場！
+                    {isEn
+                      ? 'Three famous spots, World Heritage sites, or scenic areas are designated as targets.'
+                      : 'その県を代表する有名な観光地・世界遺産・絶景スポット3箇所がマップ上に登場！'}
                   </span>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="font-bold text-amber-400 font-mono text-sm">③</span>
                 <div>
-                  <strong className="text-slate-100">ニアピンで目標クリア:</strong>
+                  <strong className="text-slate-100">
+                    {isEn ? 'Near Pin Hit:' : 'ニアピンで目標クリア:'}
+                  </strong>
                   <span className="text-slate-400 block">
-                    名所の近く（35km/至近距離）に着弾させると「ニアピン成功！」となり目標達成。
+                    {isEn
+                      ? 'Land darts close to the target within tolerance to score a "Near Pin Hit".'
+                      : '名所の近く（難易度基準以内）に着弾させると「ニアピン成功！」となり目標達成。'}
                   </span>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <span className="font-bold text-amber-400 font-mono text-sm">④</span>
                 <div>
-                  <strong className="text-slate-100">県制覇 ＆ 未クリア県へループ:</strong>
+                  <strong className="text-slate-100">
+                    {isEn ? 'Prefecture Cleared & Next Destination:' : '県制覇 ＆ 未クリア県へループ:'}
+                  </strong>
                   <span className="text-slate-400 block">
-                    3箇所すべてクリアすると「県制覇！」となり記念朱印を捺印。次の未制覇の県へと自動で旅が続きます。
+                    {isEn
+                      ? 'Clearing all 3 landmarks earns you a commemorative stamp and automatically takes you to the next prefecture!'
+                      : '3箇所すべてクリアすると「県制覇！」となり記念朱印を捺印。次の未制覇の県へと自動で旅が続きます。'}
                   </span>
                 </div>
               </div>
@@ -87,41 +109,53 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
           <div className="bg-slate-900/90 p-4 rounded-2xl border border-sky-500/40 shadow-lg">
             <h3 className="text-base font-bold text-sky-300 flex items-center gap-2 mb-2 font-calligraphy">
               <Sparkles className="w-5 h-5 text-sky-400" />
-              難易度設定（目標の地図表示 & 距離ヒント）
+              {isEn ? 'Difficulty Settings (Pins & Distance Hints)' : '難易度設定（目標の地図表示 & 距離ヒント）'}
             </h3>
             <div className="space-y-2 text-xs text-slate-300">
               <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 flex items-start gap-2">
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-black text-[10px] flex-shrink-0">
-                  Easy (初級)
+                  Easy
                 </span>
                 <div>
-                  <strong className="text-emerald-200 block">目標の地図表示：ON（常時表示）</strong>
+                  <strong className="text-emerald-200 block">
+                    {isEn ? 'Target Pins: ON (Always Visible)' : '目標の地図表示：ON（常時表示）'}
+                  </strong>
                   <span className="text-slate-300 text-[11px] leading-relaxed block">
-                    マップ上に名所ピンやピンポイント同心円リングが常に見えています。初心者でも迷わず直感的に狙えます（スコア倍率 1.0x）。
+                    {isEn
+                      ? 'Landmark pins and bullseye rings are clearly shown on map. Ideal for beginners (Score Multiplier: 1.0x).'
+                      : 'マップ上に名所ピンやピンポイント同心円リングが常に見えています。初心者でも迷わず直感的に狙えます（スコア倍率 1.0x）。'}
                   </span>
                 </div>
               </div>
 
               <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/40 flex items-start gap-2">
                 <span className="px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 font-black text-[10px] flex-shrink-0">
-                  Normal (中級)
+                  Normal
                 </span>
                 <div>
-                  <strong className="text-amber-200 block">目標の地図表示：OFF ＆ 投げた後の距離を表示</strong>
+                  <strong className="text-amber-200 block">
+                    {isEn ? 'Target Pins: OFF / Distance & Direction Guide ON' : '目標の地図表示：OFF ＆ 投げた後の距離を表示'}
+                  </strong>
                   <span className="text-slate-300 text-[11px] leading-relaxed block">
-                    目標ピンは地図上から非表示！ダーツを着弾させると「【兼六園】まで あと 4.2 km (南東へ)」の距離と方角が表示され、修正しながら寄せていく本格ブラインドニアピン（スコア倍率 1.3x）。
+                    {isEn
+                      ? 'Pins are hidden! After each throw, distance and direction to landmark are revealed (Score Multiplier: 1.3x).'
+                      : '目標ピンは地図上から非表示！ダーツを着弾させると目標までの距離と方角が表示され、修正しながら寄せていく本格ブラインドニアピン（スコア倍率 1.3x）。'}
                   </span>
                 </div>
               </div>
 
               <div className="p-2.5 rounded-xl bg-red-950/40 border border-red-500/40 flex items-start gap-2">
                 <span className="px-2 py-0.5 rounded-full bg-red-600 text-white font-black text-[10px] flex-shrink-0">
-                  Hard (上級)
+                  Hard
                 </span>
                 <div>
-                  <strong className="text-red-200 block">目標の地図表示：OFF（距離ヒントなし）</strong>
+                  <strong className="text-red-200 block">
+                    {isEn ? 'Target Pins: OFF / Pure Blind (No Distance Hints)' : '目標の地図表示：OFF（距離ヒントなし）'}
+                  </strong>
                   <span className="text-slate-300 text-[11px] leading-relaxed block">
-                    目標ピンも距離表示も一切なし！己の地理知識と地形観察眼だけで挑む究極の達人モード（スコア倍率 1.8x）。
+                    {isEn
+                      ? 'No pins, no distance hints! Pure geography challenge with 5km pinpoint tolerance (Score Multiplier: 1.8x).'
+                      : '目標ピンも距離表示も一切なし！己の地理知識と地形観察眼だけで挑む究極の達人モード（スコア倍率 1.8x）。'}
                   </span>
                 </div>
               </div>
@@ -132,19 +166,27 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
           <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
             <h3 className="text-base font-bold text-amber-300 flex items-center gap-2 mb-2 font-calligraphy">
               <Target className="w-5 h-5 text-amber-400" />
-              2. 2通りの投てき操作
+              {isEn ? '2. Two Throwing Methods' : '2. 2通りの投てき操作'}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div className="bg-black/30 p-3 rounded-xl border border-slate-800">
-                <span className="font-bold text-sky-400 block mb-1">① タップ / クリック投てき</span>
+                <span className="font-bold text-sky-400 block mb-1">
+                  {isEn ? '① Tap / Click Throw' : '① タップ / クリック投てき'}
+                </span>
                 <p className="text-slate-400 leading-relaxed">
-                  マップ上の名所や狙いたい地点をクリックするだけで、即座にその地点を目がけてダーツが飛翔します。
+                  {isEn
+                    ? 'Simply click or tap on the map to shoot a dart directly toward that point.'
+                    : 'マップ上の名所や狙いたい地点をクリックするだけで、即座にその地点を目がけてダーツが飛翔します。'}
                 </p>
               </div>
               <div className="bg-black/30 p-3 rounded-xl border border-slate-800">
-                <span className="font-bold text-amber-400 block mb-1">② プルバック投てき (引っ張り)</span>
+                <span className="font-bold text-amber-400 block mb-1">
+                  {isEn ? '② Pull & Release Launcher' : '② プルバック投てき (引っ張り)'}
+                </span>
                 <p className="text-slate-400 leading-relaxed">
-                  画面下部の投てき台を後ろに引っ張って放つと、リアルな力加減と角度でダーツを射出できます。
+                  {isEn
+                    ? 'Pull back the launcher at the bottom and release to launch with realistic force and angle.'
+                    : '画面下部の投てき台を後ろに引っ張って放つと、リアルな力加減と角度でダーツを射出できます。'}
                 </p>
               </div>
             </div>
@@ -154,39 +196,46 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
           <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
             <h3 className="text-base font-bold text-amber-300 flex items-center gap-2 mb-2 font-calligraphy">
               <Compass className="w-5 h-5 text-sky-400" />
-              3. ダーツの立体「放物線」弾道 & 風の影響
+              {isEn ? '3. 3D Parabolic Arc & Wind Physics' : '3. ダーツの立体「放物線」弾道 & 風の影響'}
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed mb-2">
-              手前下から奥の目標へ向かって、ダーツが上空へ山なりに弧を描いて舞い上がります。地面に落ちるリアルタイムの「影」が空中で離れ、着弾瞬間にピタリと合流して突き刺さる立体物理を再現！
+              {isEn
+                ? 'Darts fly in a realistic 3D parabolic trajectory with dynamic shadows separating and meeting upon landing!'
+                : '手前下から奥の目標へ向かって、ダーツが上空へ山なりに弧を描いて舞い上がります。地面に落ちるリアルタイムの「影」が空中で離れ、着弾瞬間に合流して突き刺さる立体物理を再現！'}
             </p>
             <p className="text-xs text-slate-400 leading-relaxed">
-              風向きと風速によって、空中で風下側へ徐々に弾道が湾曲して吹き流されます。風向計を見て風上側に偏差を合わせましょう。
+              {isEn
+                ? 'Wind will curve your dart trajectory. Check the wind gauge and adjust your aim into the wind.'
+                : '風向きと風速によって、空中で風下側へ徐々に弾道が湾曲して吹き流されます。風向計を見て風上側に偏差を合わせましょう。'}
             </p>
           </div>
 
-          {/* 4. ズーム連動リスク＆リターン (広域 vs 拡大) */}
+          {/* 4. ズーム連動リスク＆リターン */}
           <div className="bg-gradient-to-br from-slate-900 via-amber-950/30 to-slate-900 p-4 rounded-2xl border border-amber-500/40 shadow-xl">
             <h3 className="text-base font-bold text-amber-300 flex items-center gap-2 mb-2 font-calligraphy">
               <Sparkles className="w-5 h-5 text-amber-400" />
-              4. ズーム連動リスク＆リターン（広域 vs 拡大）
+              {isEn ? '4. Zoom Risk & Reward' : '4. ズーム連動リスク＆リターン（広域 vs 拡大）'}
             </h3>
             <div className="space-y-2 text-xs text-slate-300">
               <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30">
                 <span className="font-bold text-emerald-300 block mb-0.5">
-                  🗺️ 広域（日本全体・地方）: 倍率 1.0x 〜 1.8x
+                  {isEn ? '🗺️ Wide Zoom (Japan-wide / Regional): 1.0x - 1.8x' : '🗺️ 広域（日本全体・地方）: 倍率 1.0x 〜 1.8x'}
                 </span>
                 <p className="text-slate-300 leading-relaxed text-[11px]">
-                  狙いやすく風の影響（画面上のピクセル変位）も最小。安全ですが獲得素点は基本点上限のローリスク・ローリターン設計です。
+                  {isEn
+                    ? 'Easy to aim and minimal wind drift on screen. Low risk, steady points.'
+                    : '狙いやすく風の影響（画面上のピクセル変位）も最小。安全ですが獲得素点は基本点上限のローリスク・ローリターン設計です。'}
                 </p>
               </div>
 
               <div className="p-2.5 rounded-xl bg-red-950/40 border border-red-500/40">
                 <span className="font-bold text-red-300 block mb-0.5">
-                  🔍 拡大（市区町村・駅前・敷地ピンポイント）: 倍率 4.0x 〜 最大5.0x！
+                  {isEn ? '🔍 Close Zoom (City / Spot Center): 4.0x - Up to 5.0x!' : '🔍 拡大（市区町村・駅前・敷地ピンポイント）: 倍率 4.0x 〜 最大5.0x！'}
                 </span>
                 <p className="text-slate-300 leading-relaxed text-[11px]">
-                  駅前広場やランドマーク敷地中心の同心円ターゲットを直撃すると「<strong>PINPOINT BULL!!</strong>」が発動し超高得点！<br />
-                  ただし、風による画面ピクセル変位が激増し、少しでも目標から流されると即「<strong>OB（枠外外れ）</strong>」になるハイリスク・ハイリターン！
+                  {isEn
+                    ? 'Hitting concentric bullseye targets triggers "PINPOINT BULL!!" for astronomical scores, but wind deviation is severe!'
+                    : '駅前広場やランドマーク敷地中心の同心円ターゲットを直撃すると「PINPOINT BULL!!」が発動し超高得点！ただし風の影響も大！'}
                 </p>
               </div>
             </div>
@@ -199,7 +248,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ onClose }) => {
             onClick={onClose}
             className="w-full py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all shadow-lg active:scale-98"
           >
-            旅をはじめる
+            {isEn ? 'Start Exploring' : '旅をはじめる'}
           </button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { PassportRecord, Achievement, RegionType, GameDifficulty, FontSize, SecureStorageEnvelope } from '../types';
+import { PassportRecord, Achievement, RegionType, GameDifficulty, FontSize, SecureStorageEnvelope, Language } from '../types';
 
 const STORAGE_KEYS = {
   PASSPORT: 'japan_dart_passport_v1',
@@ -10,6 +10,7 @@ const STORAGE_KEYS = {
   AICHI_CLEARED_CITIES: 'japan_dart_aichi_cleared_cities_v1',
   AICHI_CLEARED_LANDMARKS: 'japan_dart_aichi_cleared_landmarks_v1',
   FONT_SIZE: 'japan_dart_font_size_v1',
+  LANGUAGE: 'geo_darts_language_v1',
 };
 
 /**
@@ -454,6 +455,20 @@ export function getFontSize(): number {
 
 export function saveFontSize(size: number) {
   safeSetItem(STORAGE_KEYS.FONT_SIZE, String(size));
+}
+
+// 言語設定の保存・取得 (デフォルト 'ja')
+export function getLanguage(): Language {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.LANGUAGE);
+    return raw === 'en' ? 'en' : 'ja';
+  } catch {
+    return 'ja';
+  }
+}
+
+export function saveLanguage(lang: Language) {
+  safeSetItem(STORAGE_KEYS.LANGUAGE, lang);
 }
 
 

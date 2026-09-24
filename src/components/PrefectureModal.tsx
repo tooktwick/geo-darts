@@ -1,14 +1,16 @@
 import React from 'react';
-import { Prefecture } from '../types';
-import { REGION_NAMES, REGION_COLORS } from '../data/prefectures';
+import { Prefecture, Language } from '../types';
+import { REGION_COLORS } from '../data/prefectures';
 import { LANDMARKS } from '../data/landmarksData';
-import { X, MapPin, Users, Maximize2, Sparkles, Award, Utensils } from 'lucide-react';
+import { t, getLandmarkName, getPrefectureName, getRegionName } from '../utils/i18n';
+import { X, MapPin, Users, Maximize2, Sparkles, Award } from 'lucide-react';
 import { CategoryIcon } from './CategoryIcon';
 
 interface PrefectureModalProps {
   prefecture: Prefecture;
   visitCount: number;
   highScore: number;
+  language?: Language;
   onClose: () => void;
 }
 
@@ -16,6 +18,7 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
   prefecture,
   visitCount,
   highScore,
+  language = 'ja',
   onClose,
 }) => {
   const landmarks = LANDMARKS.filter((lm) => lm.prefId === prefecture.id);
@@ -44,7 +47,7 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
               className="text-xs font-bold px-2.5 py-0.5 rounded-full"
               style={{ backgroundColor: regionColor.light, color: regionColor.base }}
             >
-              {REGION_NAMES[prefecture.region]}
+              {getRegionName(prefecture.region, language)}
             </span>
             <span className="text-xs text-slate-400 font-mono tracking-widest uppercase">
               {prefecture.englishName}
@@ -53,15 +56,15 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
 
           <div className="flex items-baseline justify-between">
             <h2 className="text-3xl md:text-4xl font-black text-amber-300 font-calligraphy tracking-wider drop-shadow-md">
-              {prefecture.name}
+              {getPrefectureName(prefecture, language)}
             </h2>
 
             {/* 訪問スタンプ印影 (朱印風) */}
             <div className="animate-stamp">
               <div className="border-2 border-red-500 text-red-500 px-2.5 py-1 rounded-lg text-center font-calligraphy transform rotate-6 bg-red-950/20 shadow-lg">
-                <span className="text-[10px] block leading-tight font-sans">来訪記念印</span>
+                <span className="text-[10px] block leading-tight font-sans">{t('visit_stamp', language)}</span>
                 <span className="text-sm font-bold block leading-tight">
-                  {visitCount}回目来訪
+                  {t('visit_count_label', language, { count: visitCount })}
                 </span>
               </div>
             </div>
@@ -75,7 +78,7 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
               <MapPin className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[11px] text-slate-400 block font-semibold">県庁所在地</span>
+              <span className="text-[11px] text-slate-400 block font-semibold">{t('capital', language)}</span>
               <span className="text-sm font-bold text-slate-100">{prefecture.capital}</span>
             </div>
           </div>
@@ -85,7 +88,7 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
               <Users className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[11px] text-slate-400 block font-semibold">人口</span>
+              <span className="text-[11px] text-slate-400 block font-semibold">{t('population', language)}</span>
               <span className="text-sm font-bold text-slate-100">{prefecture.population}</span>
             </div>
           </div>
@@ -95,7 +98,7 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
               <Maximize2 className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[11px] text-slate-400 block font-semibold">面積</span>
+              <span className="text-[11px] text-slate-400 block font-semibold">{t('area', language)}</span>
               <span className="text-sm font-bold text-slate-100">{prefecture.areaKm2.toLocaleString()} km²</span>
             </div>
           </div>
@@ -105,8 +108,8 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
               <Award className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[11px] text-slate-400 block font-semibold">ハイスコア</span>
-              <span className="text-sm font-bold text-amber-400 font-mono">{highScore > 0 ? `${highScore.toLocaleString()} pt` : '未記録'}</span>
+              <span className="text-[11px] text-slate-400 block font-semibold">{t('high_score', language)}</span>
+              <span className="text-sm font-bold text-amber-400 font-mono">{highScore > 0 ? `${highScore.toLocaleString()} pt` : t('no_record', language)}</span>
             </div>
           </div>
         </div>
@@ -115,7 +118,7 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
         <div className="mb-4">
           <div className="flex items-center gap-1.5 text-xs font-bold text-amber-300 mb-2">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>特産品・名物</span>
+            <span>{t('specialties', language)}</span>
           </div>
           <div className="flex flex-wrap gap-1.5">
             {prefecture.specialties.map((item, idx) => (
@@ -132,7 +135,7 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
         {/* 豆知識・トリビア */}
         <div className="bg-slate-900/90 p-4 rounded-2xl border border-amber-500/20 mb-5">
           <span className="text-[11px] font-bold text-amber-400 tracking-wider uppercase block mb-1">
-            💡 ご当地トリビア
+            💡 {t('trivia', language)}
           </span>
           <p className="text-xs md:text-sm text-slate-300 leading-relaxed">
             {prefecture.trivia}
@@ -143,8 +146,8 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
         {landmarks.length > 0 && (
           <div className="mb-5 flex-1 min-h-0 flex flex-col">
             <span className="text-xs font-bold text-amber-300 block mb-2 flex items-center justify-between">
-              <span>🏯 厳選名所一覧（全{landmarks.length}箇所）</span>
-              <span className="text-[10px] text-slate-400 font-normal">※スクロールで全件閲覧可</span>
+              <span>{t('landmarks_list_title', language, { count: landmarks.length })}</span>
+              <span className="text-[10px] text-slate-400 font-normal">{t('scroll_hint', language)}</span>
             </span>
             <div className="space-y-2 overflow-y-auto max-h-52 pr-1 custom-scrollbar">
               {landmarks.map((lm) => (
@@ -157,7 +160,7 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-                      <h4 className="text-xs font-bold text-slate-200">{lm.name}</h4>
+                      <h4 className="text-xs font-bold text-slate-200">{getLandmarkName(lm, language)}</h4>
                       {lm.fameLevel && (
                         <span
                           className={`text-[9px] px-1.5 py-0.2 rounded font-bold border ${
@@ -168,14 +171,14 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
                               : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                           }`}
                         >
-                          {lm.fameLevel === 'national' ? '🌟全国' : lm.fameLevel === 'regional' ? '🗺️地域' : '🌿穴場'}
+                          {lm.fameLevel === 'national' ? t('fame_national', language) : lm.fameLevel === 'regional' ? t('fame_regional', language) : t('fame_minor', language)}
                         </span>
                       )}
                     </div>
                     <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-2">{lm.description}</p>
                     {lm.localGourmet && (
                       <div className="mt-1 flex items-center gap-1 text-[10px] text-orange-300">
-                        <span>🍜 名物:</span>
+                        <span>🍜 {t('gourmet_tag', language)}:</span>
                         <span className="text-orange-200 truncate">{lm.localGourmet}</span>
                       </div>
                     )}
@@ -191,7 +194,7 @@ export const PrefectureModal: React.FC<PrefectureModalProps> = ({
           onClick={onClose}
           className="w-full py-3 rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition-all shadow-lg shadow-amber-500/25 active:scale-98"
         >
-          探索を続ける
+          {t('continue_exploring', language)}
         </button>
       </div>
     </div>

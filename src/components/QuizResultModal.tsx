@@ -1,13 +1,15 @@
 import React from 'react';
-import { QuizQuestionResult, Prefecture } from '../types';
+import { QuizQuestionResult, Prefecture, Language } from '../types';
 import { CategoryIcon } from './CategoryIcon';
 import { CheckCircle2, AlertCircle, Sparkles, MapPin, Award, ArrowRight, Trophy } from 'lucide-react';
 import { getLandmarkImageUrl, getCategoryFallbackImage } from '../utils/landmarkImages';
+import { getLandmarkName, getPrefectureName } from '../utils/i18n';
 
 interface QuizResultModalProps {
   result: QuizQuestionResult;
   prefecture?: Prefecture | null;
   isLastQuestion: boolean;
+  language?: Language;
   onNextQuestion: () => void;
 }
 
@@ -15,8 +17,10 @@ export const QuizResultModal: React.FC<QuizResultModalProps> = ({
   result,
   prefecture,
   isLastQuestion,
+  language = 'ja',
   onNextQuestion,
 }) => {
+  const isEn = language === 'en';
   const { question, targetLandmark, isCorrect, distanceKm, pointsAwarded, judgment, hintMultiplier, zoomMultiplier } = result;
 
   // 正解画像またはカテゴリー別デフォルト画像
@@ -27,28 +31,28 @@ export const QuizResultModal: React.FC<QuizResultModalProps> = ({
     switch (judgment) {
       case 'bull':
         return {
-          title: '🎯 神の眼！ピンポイント直撃！',
+          title: isEn ? '🎯 Pinpoint Bullseye!' : '🎯 神の眼！ピンポイント直撃！',
           color: 'from-amber-400 to-yellow-500 text-slate-950 border-amber-300 ring-2 ring-amber-300 shadow-amber-500/50',
-          sub: '驚異の地理感覚！ドンピシャの着弾です！',
+          sub: isEn ? 'Phenomenal geographic sense! Direct hit!' : '驚異の地理感覚！ドンピシャの着弾です！',
         };
       case 'hit':
         return {
-          title: '⭕ 正解！見事な推理！',
+          title: isEn ? '⭕ Correct! Great Deduction!' : '⭕ 正解！見事な推理！',
           color: 'from-emerald-500 to-teal-500 text-white border-emerald-300 ring-2 ring-emerald-400 shadow-emerald-500/40',
-          sub: 'お見事！名所の所在地を正確に捉えました！',
+          sub: isEn ? 'Well done! You pinpointed the location!' : 'お見事！名所の所在地を正確に捉えました！',
         };
       case 'near_miss':
         return {
-          title: '⚠️ ニアミス！惜しい！',
+          title: isEn ? '⚠️ Near Miss! So Close!' : '⚠️ ニアミス！惜しい！',
           color: 'from-blue-600 to-indigo-600 text-white border-sky-300 ring-1 ring-sky-400 shadow-blue-500/30',
-          sub: '地域は合っています！あと少しでした！',
+          sub: isEn ? 'Right region, but slightly off target.' : '地域は合っています！あと少しでした！',
         };
       case 'miss':
       default:
         return {
-          title: '❌ 外れ！',
+          title: isEn ? '❌ Missed!' : '❌ 外れ！',
           color: 'from-rose-600 to-red-700 text-white border-rose-400 ring-1 ring-rose-400 shadow-rose-500/30',
-          sub: '残念！正解地点は別の場所でした。',
+          sub: isEn ? 'Too bad! The target was elsewhere.' : '残念！正解地点は別の場所でした。',
         };
     }
   };
@@ -77,13 +81,17 @@ export const QuizResultModal: React.FC<QuizResultModalProps> = ({
         {/* スコア・誤差距離バッジ */}
         <div className="grid grid-cols-2 gap-2 text-center">
           <div className="bg-slate-900/80 rounded-2xl p-2.5 border border-slate-700/80">
-            <span className="text-[11px] text-slate-400 block mb-0.5">目標との誤差</span>
+            <span className="text-[11px] text-slate-400 block mb-0.5">
+              {isEn ? 'Distance Error' : '目標との誤差'}
+            </span>
             <span className="text-base sm:text-lg font-mono font-black text-amber-300">
               {distanceStr}
             </span>
           </div>
           <div className="bg-slate-900/80 rounded-2xl p-2.5 border border-slate-700/80">
-            <span className="text-[11px] text-slate-400 block mb-0.5">獲得スコア</span>
+            <span className="text-[11px] text-slate-400 block mb-0.5">
+              {isEn ? 'Points Earned' : '獲得スコア'}
+            </span>
             <span className="text-base sm:text-lg font-mono font-black text-emerald-400">
               +{pointsAwarded.toLocaleString()} pt
             </span>
@@ -100,7 +108,7 @@ export const QuizResultModal: React.FC<QuizResultModalProps> = ({
           <div className="w-full sm:w-36 h-28 sm:h-28 rounded-xl overflow-hidden bg-slate-950 border border-slate-700 flex-shrink-0 relative">
             <img
               src={imageUrl}
-              alt={targetLandmark.name}
+              alt={getLandmarkName(targetLandmark, language)}
               className="w-full h-full object-cover"
               onError={(e) => {
                 // 画像フォールバック: ローカル画像へ切替
@@ -121,10 +129,13 @@ export const QuizResultModal: React.FC<QuizResultModalProps> = ({
           <div className="flex-1 min-w-0 flex flex-col justify-center text-left">
             <div className="flex items-center gap-1.5 text-xs text-amber-400 font-bold mb-0.5">
               <MapPin className="w-3.5 h-3.5" />
-              <span>正解: {prefecture ? prefecture.name : '日本'}</span>
+              <span>
+                {isEn ? 'Answer: ' : '正解: '}
+                {getPrefectureName(prefecture, language) || (isEn ? 'Japan' : '日本')}
+              </span>
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-white font-calligraphy tracking-wide">
-              {targetLandmark.name}
+              {getLandmarkName(targetLandmark, language)}
             </h3>
             <p className="text-xs text-slate-300 mt-1 line-clamp-3 leading-relaxed">
               {targetLandmark.description}
@@ -136,7 +147,7 @@ export const QuizResultModal: React.FC<QuizResultModalProps> = ({
         <div className="bg-amber-950/30 rounded-2xl p-3 border border-amber-500/30">
           <h4 className="text-xs font-bold text-amber-300 flex items-center gap-1.5 mb-1">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>名所と歴史の豆知識</span>
+            <span>{isEn ? 'History & Trivia' : '名所と歴史の豆知識'}</span>
           </h4>
           <p className="text-xs text-slate-200 leading-relaxed">
             {question.explanation}
@@ -149,7 +160,11 @@ export const QuizResultModal: React.FC<QuizResultModalProps> = ({
             onClick={onNextQuestion}
             className="w-full sm:w-auto px-6 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/30 border border-amber-300 transition-all flex items-center justify-center gap-2 active:scale-95"
           >
-            <span>{isLastQuestion ? '総合結果を見る' : '次の問題へ進む'}</span>
+            <span>
+              {isLastQuestion
+                ? (isEn ? 'See Final Results' : '総合結果を見る')
+                : (isEn ? 'Next Question' : '次の問題へ進む')}
+            </span>
             {isLastQuestion ? <Trophy className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
           </button>
         </div>

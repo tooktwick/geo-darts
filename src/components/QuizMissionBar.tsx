@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { QuizGameState, GeoQuizQuestion } from '../types';
+import { QuizGameState, GeoQuizQuestion, Language } from '../types';
 import { CategoryIcon } from './CategoryIcon';
 import {
   Lightbulb,
@@ -16,12 +16,14 @@ import {
 
 interface QuizMissionBarProps {
   quizState: QuizGameState;
+  language?: Language;
   onUnlockHint: (level: number) => void;
   onRestartQuiz?: () => void;
 }
 
 export const QuizMissionBar: React.FC<QuizMissionBarProps> = ({
   quizState,
+  language = 'ja',
   onUnlockHint,
   onRestartQuiz,
 }) => {

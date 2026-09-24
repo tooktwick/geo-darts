@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DartHit, GameDifficulty } from '../types';
+import { DartHit, GameDifficulty, Language } from '../types';
 import confetti from 'canvas-confetti';
 
 interface DartOverlayProps {
@@ -25,6 +25,7 @@ interface DartOverlayProps {
   onLauncherPointerMove: (e: React.PointerEvent) => void;
   onLauncherPointerUp: (e: React.PointerEvent) => void;
   difficulty?: GameDifficulty;
+  language?: Language;
 }
 
 export const DartOverlay: React.FC<DartOverlayProps> = ({
@@ -35,6 +36,7 @@ export const DartOverlay: React.FC<DartOverlayProps> = ({
   onLauncherPointerMove,
   onLauncherPointerUp,
   difficulty = 'easy',
+  language = 'ja',
 }) => {
   // 着弾エフェクト用 (衝撃波・スパーク)
   const [shockwaves, setShockwaves] = useState<Array<{ id: string; x: number; y: number; isCorrect: boolean; isPinpointBull?: boolean; isOb?: boolean }>>([]);
@@ -409,19 +411,25 @@ export const DartOverlay: React.FC<DartOverlayProps> = ({
           className={`relative group cursor-grab active:cursor-grabbing px-4 py-2 rounded-2xl glass-panel-gold border-amber-400/50 shadow-2xl flex items-center gap-2.5 transition-transform active:scale-95 touch-none ${
             pullBackState?.isPulling ? 'ring-4 ring-amber-400/60 bg-amber-500/30' : ''
           }`}
-          title="ここを引いて放すとプルバック投てき！マップ直接クリックでも投げられます。"
+          title={
+            language === 'en'
+              ? 'Pull & release to throw! You can also click or tap the map directly.'
+              : 'ここを引いて放すとプルバック投てき！マップ直接クリックでも投げられます。'
+          }
         >
           <span className="text-2xl animate-pulse">🏹</span>
           <div className="text-left">
             <span className="text-[10px] text-amber-300 font-bold block uppercase tracking-wider">
-              {pullBackState?.isPulling ? '引っ張って放せ！' : 'PULL & RELEASE'}
+              {pullBackState?.isPulling
+                ? (language === 'en' ? 'RELEASE NOW!' : '引っ張って放せ！')
+                : 'PULL & RELEASE'}
             </span>
             <span className="text-xs font-bold text-slate-100 block">
-              引いて放つ投てき台
+              {language === 'en' ? 'Pull & Release Launcher' : '引いて放つ投てき台'}
             </span>
           </div>
           <span className="text-[10px] text-slate-400 hidden sm:inline border-l border-slate-700 pl-2">
-            （地図クリックでも即投てき可）
+            {language === 'en' ? '(Or click map directly)' : '（地図クリックでも即投てき可）'}
           </span>
         </div>
       </div>

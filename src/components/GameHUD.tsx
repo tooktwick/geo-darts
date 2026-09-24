@@ -1,5 +1,6 @@
-import { GameMode, MapType, WindState, Prefecture, Landmark, ZoomRiskInfo, GameDifficulty, FontSize } from '../types';
-import { Compass, Volume2, VolumeX, Music, BookOpen, HelpCircle, RotateCcw, Map as MapIcon, Globe, MapPin, Zap, Eye, EyeOff, Target, Brain } from 'lucide-react';
+import { GameMode, MapType, WindState, Prefecture, Landmark, ZoomRiskInfo, GameDifficulty, FontSize, Language } from '../types';
+import { Compass, Volume2, VolumeX, Music, BookOpen, HelpCircle, RotateCcw, Map as MapIcon, Globe, MapPin, Zap, Eye, EyeOff, Target, Brain, Languages } from 'lucide-react';
+import { t, getWindDirectionName, getPrefectureName, getLandmarkName } from '../utils/i18n';
 
 interface GameHUDProps {
   mode: GameMode;
@@ -10,6 +11,8 @@ interface GameHUDProps {
   onChangeDifficulty?: (diff: GameDifficulty) => void;
   fontSize?: FontSize;
   onToggleFontSize?: () => void;
+  language?: Language;
+  onToggleLanguage?: () => void;
   wind: WindState;
   score: number;
   combo: number;
@@ -39,6 +42,8 @@ export const GameHUD: React.FC<GameHUDProps> = ({
   onChangeDifficulty,
   fontSize = 'large',
   onToggleFontSize,
+  language = 'ja',
+  onToggleLanguage,
   wind,
   score,
   combo,
@@ -72,15 +77,15 @@ export const GameHUD: React.FC<GameHUDProps> = ({
             <span className="text-2xl animate-bounce">🎯</span>
             <div>
               <h1 className="font-sans text-lg md:text-xl font-black tracking-wider text-amber-300 drop-shadow-sm flex items-center gap-1.5">
-                Geo Darts Japan
+                {t('appTitle', language)}
               </h1>
               <span className="text-[10px] text-slate-400 tracking-widest block -mt-0.5 font-calligraphy font-semibold">
-                ジオダーツ 日本列島
+                {t('appSubtitle', language)}
               </span>
             </div>
           </div>
 
-          {/* モード選択タブ (基本: 県ごとの名所 / スナイパー: 全国からランダム1名所 / ラリー: テーマ別名所ラリー) */}
+          {/* モード選択タブ */}
           <div className="glass-panel p-1 rounded-xl flex items-center gap-1">
             <button
               onClick={() => onSelectMode('basic')}
@@ -89,10 +94,10 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/25 font-black ring-1 ring-amber-300'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
-              title="基本モード: 県ごとの名所3箇所をニアピンで狙い、47都道府県完全制覇を目指す"
+              title={t('mode_basic_desc', language)}
             >
               <MapPin className="w-3.5 h-3.5" />
-              <span>基本 (県別名所)</span>
+              <span>{t('mode_basic', language)}</span>
             </button>
             <button
               onClick={() => onSelectMode('sniper')}
@@ -101,10 +106,10 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   ? 'bg-red-600 text-white shadow-md shadow-red-600/30 font-black'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
-              title="スナイパーモード: 全国470名所からランダムに指定される目標を10投で連続射貫く"
+              title={t('mode_sniper_desc', language)}
             >
               <Target className="w-3.5 h-3.5" />
-              <span>スナイパー (全国ランダム)</span>
+              <span>{t('mode_sniper', language)}</span>
             </button>
             <button
               onClick={() => onSelectMode('rally')}
@@ -113,9 +118,9 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20 font-black'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
-              title="地域ラリーモード: テーマ（新幹線・世界遺産・グルメ・大縦断）に沿った名所を順番にラリー走破"
+              title={t('mode_rally_desc', language)}
             >
-              <span>ラリー (テーマ別名所)</span>
+              <span>{t('mode_rally', language)}</span>
             </button>
             <button
               onClick={() => onSelectMode('quiz')}
@@ -124,10 +129,10 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-500/30 font-black ring-1 ring-purple-300'
                   : 'text-purple-300 hover:text-white hover:bg-purple-950/40 border border-purple-500/30'
               }`}
-              title="ご当地クイズ推理モード: 歴史や地理のヒントを手がかりに全国の名所を推理して射貫く！"
+              title={t('mode_quiz_desc', language)}
             >
               <Brain className="w-3.5 h-3.5" />
-              <span>推理クイズ</span>
+              <span>{t('mode_quiz', language)}</span>
             </button>
             <button
               onClick={() => onSelectMode('aichi_detail')}
@@ -136,10 +141,10 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black shadow-md shadow-amber-500/30 ring-1 ring-amber-300'
                   : 'text-amber-300 hover:text-amber-100 hover:bg-amber-950/40 border border-amber-500/30'
               }`}
-              title="愛知県詳細限定版: 愛知県の市を選択して、市ごとに3つの厳選名所を狙い全市完全制覇を目指す！"
+              title={t('mode_aichi_desc', language)}
             >
               <span>🏯</span>
-              <span>愛知限定 (市別名所)</span>
+              <span>{t('mode_aichi', language)}</span>
             </button>
             <button
               onClick={() => onSelectMode('free')}
@@ -148,9 +153,9 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   ? 'bg-emerald-600 text-white shadow-md'
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
               }`}
-              title="自由探索モード: 制約なく日本全国を自由に巡る"
+              title={t('mode_free_desc', language)}
             >
-              <span>自由探索</span>
+              <span>{t('mode_free', language)}</span>
             </button>
           </div>
 
@@ -158,23 +163,23 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           <button
             onClick={onToggleMapType}
             className="glass-panel px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-amber-300 hover:border-amber-400/40 transition-all active:scale-95"
-            title="マップエンジン切り替え (国土地理院マップ / SVGマップ)"
+            title={mapType === 'gsi' ? t('map_gsi_title', language) : t('map_svg_title', language)}
           >
             {mapType === 'gsi' ? (
               <>
                 <Globe className="w-4 h-4 text-sky-400" />
-                <span className="hidden sm:inline">地理院地図</span>
+                <span className="hidden sm:inline">{t('map_gsi', language)}</span>
               </>
             ) : (
               <>
                 <MapIcon className="w-4 h-4 text-emerald-400" />
-                <span className="hidden sm:inline">SVGマップ</span>
+                <span className="hidden sm:inline">{t('map_svg', language)}</span>
               </>
             )}
           </button>
 
-          {/* 難易度切り替えタブ (Easy: 表示ON / Normal: 表示OFF・距離表示 / Hard: 表示OFF) */}
-          <div className="glass-panel p-1 rounded-xl flex items-center gap-0.5" title="目標表示と難易度設定">
+          {/* 難易度切り替えタブ */}
+          <div className="glass-panel p-1 rounded-xl flex items-center gap-0.5" title={t('difficulty', language)}>
             <button
               onClick={() => onChangeDifficulty?.('easy')}
               className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
@@ -182,7 +187,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   ? 'bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/20 ring-1 ring-emerald-300'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
               }`}
-              title="Easy: 目標の地図表示 ON（常時表示で狙いやすい）"
+              title={t('diff_easy_title', language)}
             >
               <Eye className="w-3.5 h-3.5 text-emerald-300" />
               <span>Easy</span>
@@ -194,7 +199,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 ring-1 ring-amber-300'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
               }`}
-              title="Normal: 目標の地図表示 OFF（投げた後に目標までの距離・方角を表示）"
+              title={t('diff_normal_title', language)}
             >
               <EyeOff className="w-3.5 h-3.5 text-amber-300" />
               <span>Normal</span>
@@ -206,7 +211,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   ? 'bg-red-600 text-white font-black shadow-md shadow-red-600/30 ring-1 ring-red-400'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
               }`}
-              title="Hard: 目標の地図表示 OFF（距離ヒントなしの完全実力モード）"
+              title={t('diff_hard_title', language)}
             >
               <EyeOff className="w-3.5 h-3.5 text-red-300" />
               <span>Hard</span>
@@ -214,7 +219,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           </div>
         </div>
 
-        {/* 中央: スナイパーモード時のターゲット表示 (全国からランダムに1つの名所を狙う) */}
+        {/* 中央: スナイパーモード時のターゲット表示 */}
         {mode === 'sniper' && (currentLandmarkTarget || currentTarget) && (
           <div className="pointer-events-auto flex items-center justify-center">
             <div className="glass-panel-gold px-4 py-2 rounded-2xl flex items-center gap-4 border border-amber-400/60 animate-target-glow shadow-xl shadow-amber-500/10">
@@ -225,12 +230,12 @@ export const GameHUD: React.FC<GameHUDProps> = ({
                   </span>
                   {currentTargetPref && (
                     <span className="text-[10px] text-amber-300 font-bold bg-amber-950/60 px-1.5 py-0.2 rounded border border-amber-500/30">
-                      📍 {currentTargetPref.name}
+                      📍 {getPrefectureName(currentTargetPref, language)}
                     </span>
                   )}
                 </div>
                 <span className="text-lg md:text-2xl font-black text-white font-calligraphy tracking-widest drop-shadow-md block">
-                  {currentLandmarkTarget ? currentLandmarkTarget.name : currentTarget?.name}
+                  {currentLandmarkTarget ? getLandmarkName(currentLandmarkTarget, language) : getPrefectureName(currentTarget, language)}
                 </span>
                 <span className="text-[10px] text-amber-200/80 block -mt-0.5 font-sans truncate max-w-[200px] md:max-w-xs">
                   {currentLandmarkTarget ? currentLandmarkTarget.description : currentTarget?.capital}
@@ -272,7 +277,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           {/* 風向風速計 */}
           <div
             className="glass-panel px-3 py-1.5 rounded-xl flex items-center gap-2 border-slate-700/50"
-            title={`風向: ${wind.direction}, 風速: ${wind.speed.toFixed(1)} m/s`}
+            title={`${t('wind', language)}: ${getWindDirectionName(wind.direction, language)}, ${wind.speed.toFixed(1)} m/s`}
           >
             <div className="relative w-7 h-7 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center">
               <Compass
@@ -282,7 +287,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
             </div>
             <div className="text-left">
               <div className="text-[10px] text-slate-400 leading-tight">
-                風向 <span className="text-slate-200 font-bold">{wind.direction}</span>
+                {t('wind', language)} <span className="text-slate-200 font-bold">{getWindDirectionName(wind.direction, language)}</span>
               </div>
               <div className="text-xs font-mono font-bold text-sky-300 leading-tight">
                 {wind.speed.toFixed(1)} <span className="text-[10px] font-normal text-slate-400">m/s</span>
@@ -340,7 +345,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
           {onToggleFontSize && (() => {
             const scaleNum = typeof fontSize === 'number' ? fontSize : (fontSize === 'large' ? 115 : 100);
             const isLarge = scaleNum > 105;
-            const labelText = scaleNum === 100 ? '標準' : scaleNum === 115 ? '大' : `${scaleNum}%`;
+            const labelText = scaleNum === 100 ? (language === 'en' ? 'Normal' : '標準') : scaleNum === 115 ? (language === 'en' ? 'Large' : '大') : `${scaleNum}%`;
 
             return (
               <button
@@ -354,7 +359,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
               >
                 <span className="text-sm font-black font-mono">Aa</span>
                 <span className="hidden sm:inline font-bold">
-                  文字:{labelText}
+                  {language === 'en' ? `Font:${labelText}` : `文字:${labelText}`}
                 </span>
               </button>
             );
@@ -366,17 +371,31 @@ export const GameHUD: React.FC<GameHUDProps> = ({
             className="glass-panel px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold text-amber-300 hover:bg-amber-500/10 hover:border-amber-400/50 transition-all active:scale-95 border-amber-500/30"
           >
             <BookOpen className="w-4 h-4 text-amber-400" />
-            <span className="hidden sm:inline">パスポート</span>
+            <span className="hidden sm:inline">{t('passport', language)}</span>
             <span className="bg-amber-500/30 text-amber-300 text-[10px] px-1.5 py-0.5 rounded-full font-mono font-bold">
               {passportCount}/47
             </span>
           </button>
 
+          {/* 言語切り替えトグル (日本語 ⇔ English) */}
+          {onToggleLanguage && (
+            <button
+              onClick={onToggleLanguage}
+              className="glass-panel px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold transition-all active:scale-95 border border-sky-500/40 hover:border-sky-400 bg-sky-500/10 text-sky-300 hover:text-white"
+              title={t('lang_btn_title', language)}
+            >
+              <Languages className="w-4 h-4 text-sky-400" />
+              <span className="font-mono font-bold">
+                {language === 'ja' ? 'EN' : 'JP'}
+              </span>
+            </button>
+          )}
+
           {/* ヘルプ */}
           <button
             onClick={onOpenHelp}
             className="glass-panel p-2 rounded-xl text-slate-300 hover:text-white hover:border-slate-500 transition-all active:scale-95"
-            title="遊び方・採点ルール"
+            title={t('help_title', language)}
           >
             <HelpCircle className="w-4 h-4" />
           </button>

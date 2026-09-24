@@ -21,6 +21,7 @@ import {
   GeoQuizQuestion,
   QuizGameState,
   QuizQuestionResult,
+  Language,
 } from './types';
 import { PREFECTURES, getPrefectureById } from './data/prefectures';
 import {
@@ -56,7 +57,10 @@ import {
   resetAllAichiClearedData,
   getFontSize,
   saveFontSize,
+  getLanguage,
+  saveLanguage,
 } from './utils/storage';
+import { t } from './utils/i18n';
 import {
   calculateHaversineDistance,
   unprojectMapToGeo,
@@ -117,6 +121,24 @@ export const App: React.FC = () => {
   const [difficulty, setDifficulty] = useState<GameDifficulty>(() => getGameDifficulty());
   const difficultyRef = useRef<GameDifficulty>(getGameDifficulty());
   difficultyRef.current = difficulty;
+  // 言語設定: ja (日本語) / en (英語)
+  const [language, setLanguage] = useState<Language>(() => getLanguage());
+  
+  // HUDボタンクリック時の言語切り替え
+  const handleToggleLanguage = useCallback(() => {
+    audio.playClickSound();
+    setLanguage((prev) => {
+      const next: Language = prev === 'ja' ? 'en' : 'ja';
+      saveLanguage(next);
+      return next;
+    });
+  }, []);
+
+  // 言語変更時にブラウザタイトルを動的更新
+  useEffect(() => {
+    document.title = t('browserTitle', language);
+  }, [language]);
+
   // フォントサイズ設定: パーセンテージ数値 80〜160 (デフォルト 115%「大」)
   const [fontSize, setFontSize] = useState<number>(() => getFontSize());
   const [showFontToast, setShowFontToast] = useState(false);
@@ -1961,6 +1983,8 @@ export const App: React.FC = () => {
         onOpenHelp={() => setShowHelpModal(true)}
         onRestartSniper={handleRestartSniper}
         passportCount={visitedPrefIds.size}
+        language={language}
+        onToggleLanguage={handleToggleLanguage}
       />
 
       {/* 1.1 Ctrl + ホイール操作時の文字サイズ変更トーストインジケーター */}
@@ -2132,6 +2156,7 @@ export const App: React.FC = () => {
         onLauncherPointerMove={handleLauncherPointerMove}
         onLauncherPointerUp={handleLauncherPointerUp}
         difficulty={difficulty}
+        language={language}
       />
 
       {/* 4. 基本モード専用ミッションバー */}
@@ -2144,6 +2169,7 @@ export const App: React.FC = () => {
           attempts={basicTourState.attemptsForCurrentPref}
           zoomRisk={currentZoomRisk}
           difficulty={difficulty}
+          language={language}
           latestHit={currentHits.length > 0 ? currentHits[currentHits.length - 1] : null}
           onSkipPrefecture={handleSkipPrefecture}
           onRerollLandmarks={handleRerollLandmarks}
@@ -2181,6 +2207,7 @@ export const App: React.FC = () => {
       {mode === 'quiz' && !quizState.isFinished && (
         <QuizMissionBar
           quizState={quizState}
+          language={language}
           onUnlockHint={handleUnlockQuizHint}
           onRestartQuiz={handleRestartQuiz}
         />
@@ -2197,6 +2224,7 @@ export const App: React.FC = () => {
           difficulty={difficulty}
           isPrefectureCleared={hitLandmarkModalData.isPrefCleared}
           clearedCount={hitLandmarkModalData.clearedCount}
+          language={language}
           onClose={() => {
             const isCleared = hitLandmarkModalData.isPrefCleared;
             setHitLandmarkModalData(null);
@@ -2266,6 +2294,7 @@ export const App: React.FC = () => {
           prefecture={selectedPrefectureForModal}
           visitCount={passportRecords[selectedPrefectureForModal.id]?.visitCount || 1}
           highScore={passportRecords[selectedPrefectureForModal.id]?.highScore || 0}
+          language={language}
           onClose={() => setSelectedPrefectureForModal(null)}
         />
       )}
@@ -2274,6 +2303,7 @@ export const App: React.FC = () => {
         <PassportModal
           passportRecords={passportRecords}
           achievements={achievements}
+          language={language}
           onClose={() => setShowPassportModal(false)}
           onSelectPrefecture={(prefId) => {
             const pref = getPrefectureById(prefId);
@@ -2283,7 +2313,7 @@ export const App: React.FC = () => {
       )}
 
       {showHelpModal && (
-        <HelpModal onClose={() => setShowHelpModal(false)} />
+        <HelpModal language={language} onClose={() => setShowHelpModal(false)} />
       )}
 
       {showGameOverModal && (
@@ -2291,6 +2321,7 @@ export const App: React.FC = () => {
           state={sniperState}
           highScore={sniperHighScore}
           isNewRecord={isNewHighScore}
+          language={language}
           onRestart={handleRestartSniper}
           onGoFreeMode={() => {
             setShowGameOverModal(false);
@@ -2354,6 +2385,7 @@ export const App: React.FC = () => {
           result={quizState.lastResult}
           prefecture={getPrefectureById(quizState.lastResult.targetLandmark.prefId)}
           isLastQuestion={quizState.currentIndex >= quizState.questions.length - 1}
+          language={language}
           onNextQuestion={handleNextQuizQuestion}
         />
       )}

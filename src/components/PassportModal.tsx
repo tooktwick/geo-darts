@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { PassportRecord, Achievement, RegionType } from '../types';
+import { PassportRecord, Achievement, RegionType, Language } from '../types';
 import { PREFECTURES, REGION_NAMES, REGION_COLORS } from '../data/prefectures';
+import { t, getPrefectureName, getRegionName } from '../utils/i18n';
 import { X, BookOpen, Award, CheckCircle2, Star, Calendar, Trophy, ChevronRight } from 'lucide-react';
 
 interface PassportModalProps {
   passportRecords: Record<number, PassportRecord>;
   achievements: Achievement[];
+  language?: Language;
   onClose: () => void;
   onSelectPrefecture?: (prefId: number) => void;
 }
@@ -13,6 +15,7 @@ interface PassportModalProps {
 export const PassportModal: React.FC<PassportModalProps> = ({
   passportRecords,
   achievements,
+  language = 'ja',
   onClose,
   onSelectPrefecture,
 }) => {
@@ -29,7 +32,7 @@ export const PassportModal: React.FC<PassportModalProps> = ({
     const visitedInRegion = prefsInRegion.filter((p) => !!passportRecords[p.id]);
     return {
       region: reg,
-      name: REGION_NAMES[reg],
+      name: getRegionName(reg, language),
       total: prefsInRegion.length,
       visited: visitedInRegion.length,
       percent: Math.round((visitedInRegion.length / prefsInRegion.length) * 100),
@@ -55,10 +58,10 @@ export const PassportModal: React.FC<PassportModalProps> = ({
             </div>
             <div>
               <h2 className="text-xl md:text-2xl font-black text-amber-300 font-calligraphy flex items-center gap-2">
-                日本列島 踏破パスポート
+                {t('passport_heading', language)}
               </h2>
               <p className="text-xs text-slate-400">
-                ダーツで巡った日本全国の軌跡と獲得した名誉
+                {t('passport_subheading', language)}
               </p>
             </div>
           </div>
@@ -76,9 +79,11 @@ export const PassportModal: React.FC<PassportModalProps> = ({
           {/* 全国制覇メーター */}
           <div className="w-full md:w-auto flex-1 max-w-md">
             <div className="flex items-center justify-between text-xs mb-1.5">
-              <span className="font-bold text-slate-300">全国制覇率</span>
+              <span className="font-bold text-slate-300">{t('conquest_rate', language)}</span>
               <span className="font-mono font-bold text-amber-400 text-sm">
-                {visitedCount} / 47 都道府県 ({progressPercent}%)
+                {language === 'en'
+                  ? `${visitedCount} / 47 Prefectures (${progressPercent}%)`
+                  : `${visitedCount} / 47 都道府県 (${progressPercent}%)`}
               </span>
             </div>
             <div className="w-full h-3 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
@@ -99,7 +104,7 @@ export const PassportModal: React.FC<PassportModalProps> = ({
                   : 'text-slate-300 hover:text-white'
               }`}
             >
-              <span>スタンプ帳</span>
+              <span>{t('stamps_tab', language)}</span>
               <span className="text-[10px] bg-slate-950/20 px-1.5 py-0.5 rounded-full font-mono">
                 {visitedCount}
               </span>
@@ -113,7 +118,7 @@ export const PassportModal: React.FC<PassportModalProps> = ({
               }`}
             >
               <Trophy className="w-3.5 h-3.5" />
-              <span>実績バッジ</span>
+              <span>{t('achievements_tab', language)}</span>
               <span className="text-[10px] bg-slate-950/20 px-1.5 py-0.5 rounded-full font-mono">
                 {unlockedAchievementsCount}/{achievements.length}
               </span>
@@ -176,31 +181,31 @@ export const PassportModal: React.FC<PassportModalProps> = ({
                           className="text-[9px] px-1.5 py-0.5 rounded font-bold"
                           style={{ backgroundColor: regionColor.light, color: regionColor.base }}
                         >
-                          {REGION_NAMES[pref.region].replace('地方', '')}
+                          {getRegionName(pref.region, language).replace('地方', '')}
                         </span>
                       </div>
 
                       <div className="flex items-baseline justify-between mb-1">
-                        <h4 className="text-base font-bold text-slate-100 font-calligraphy">
-                          {pref.name}
+                        <h4 className="text-base font-bold text-slate-100 font-calligraphy truncate">
+                          {getPrefectureName(pref, language)}
                         </h4>
                         {isVisited && (
-                          <span className="text-xs font-mono font-bold text-amber-400">
-                            {record.visitCount}回
+                          <span className="text-xs font-mono font-bold text-amber-400 flex-shrink-0 ml-1">
+                            {language === 'en' ? `${record.visitCount}x` : `${record.visitCount}回`}
                           </span>
                         )}
                       </div>
 
                       {isVisited ? (
                         <div className="text-[10px] text-slate-400 flex items-center justify-between border-t border-slate-800/80 pt-1.5 mt-1.5">
-                          <span>ハイスコア</span>
+                          <span>{t('high_score', language)}</span>
                           <span className="font-mono font-bold text-slate-200">
                             {record.highScore > 0 ? `${record.highScore}pt` : '-'}
                           </span>
                         </div>
                       ) : (
                         <div className="text-[10px] text-slate-500 text-center py-1 font-mono">
-                          未到達
+                          {language === 'en' ? 'Unvisited' : '未到達'}
                         </div>
                       )}
                     </div>
@@ -237,7 +242,7 @@ export const PassportModal: React.FC<PassportModalProps> = ({
                       </h4>
                       {ach.unlocked && (
                         <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3" /> 達成
+                          <CheckCircle2 className="w-3 h-3" /> {language === 'en' ? 'Unlocked' : '達成'}
                         </span>
                       )}
                     </div>
@@ -246,7 +251,8 @@ export const PassportModal: React.FC<PassportModalProps> = ({
                     </p>
                     {ach.unlocked && ach.unlockedAt && (
                       <div className="text-[10px] text-slate-500 mt-2 font-mono">
-                        達成日: {new Date(ach.unlockedAt).toLocaleDateString('ja-JP')}
+                        {language === 'en' ? 'Date: ' : '達成日: '}
+                        {new Date(ach.unlockedAt).toLocaleDateString(language === 'en' ? 'en-US' : 'ja-JP')}
                       </div>
                     )}
                   </div>
